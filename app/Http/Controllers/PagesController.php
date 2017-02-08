@@ -184,4 +184,24 @@ class PagesController extends Controller
             ->back()
             ->with('message', 'Your support message have been sent');
     }
+     public function gitSubmit(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|confirmed',
+            'subject' => 'required',
+            'description' => 'required'
+        ]);
+
+        try {
+            Mail::to('support@beautiesfromheaven.com')
+                ->send(new SupportMail($request));
+        } catch (Swift_TransportException $exception) {
+            // we don't care if the email address is valid
+        }
+
+        return redirect()
+            ->back()
+            ->with('message', 'Your support message have been sent');
+    }
 }
